@@ -1,0 +1,46 @@
+clc;clear all;                                    %Reducir   0.1267 seg
+im=double(imread('E:\__ARCHIVOS MATLAB\FOTOS\MYCAM\_18.jpg'));
+[mayorlevel,minorlevel]=skinmatrix(size(im,1),size(im,2),'quality');
+% hImage1 = image(uint8(im));
+% axis off
+times=10;
+time=0;
+a=0;
+for i=1:times
+im=double(imread('E:\__ARCHIVOS MATLAB\FOTOS\MYCAM\_18.jpg'));
+tic
+% imskin=cat(3 ,(im(:,:,1)./im(:,:,2)),(im(:,:,1)./im(:,:,3)),...
+%     (im(:,:,2)./im(:,:,3)));
+
+
+imskin=( im(:,:,[1,1,2])./im(:,:,[2,3,3]) );
+
+imskin=((imskin>minorlevel) & (imskin<mayorlevel));
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+imskin=imskin(:,:,[1,2,3]).*imskin(:,:,[2,3,1]).*...                     %
+    imskin(:,:,[3,1,2]);                                                 %
+%     imskinp=imskin(:,:,1) .* imskin(:,:,2) .* imskin(:,:,3);           %
+%     imskin=cat(3,imskinp,imskinp,imskinp);                             %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+im=im.*imskin;
+
+im=uint8(im);
+image(im)
+% set(hImage1,'Cdata',uint8(im))
+% drawnow
+axis image off
+time=time+toc;
+a=a+1;
+end
+disp(time/a)
+
+
+
+

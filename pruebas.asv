@@ -1,0 +1,81 @@
+% function pruebas
+clc;clear all;
+File = 'Alessandra_Ambrosio.jpg';
+im = imread( strcat( 'PIC\', File ) );
+imdbl = double( im );
+SetG = 1;
+im3 = im;
+rX = 810:990;
+% rY = 290:270;
+rY = 770:900;
+im3( rY, rX, : ) = 255;
+image( im3 );
+axis image off
+drawnow
+% return
+% pause(2)
+% image( im3 );axis image off
+im2 = double( im( rY, rX, : ) );
+% im2 = imcrop;
+image( im2/255 );
+axis image off
+drawnow
+% return
+perc = 10^2;
+MaxRG = max( max( im2(:,:,1)./im2(:,:,2) ) );
+MaxRG = MaxRG + MaxRG/perc;
+
+MaxRB = max( max( im2(:,:,1)./im2(:,:,3) ) );
+MaxRB = MaxRB + MaxRB/perc;
+
+MaxGB = max( max( im2(:,:,2)./im2(:,:,3) ) );
+MaxGB = MaxGB + MaxGB/perc;
+
+MinRG = min( min( im2(:,:,1)./im2(:,:,2) ) );
+MinRG = MinRG - MinRG/perc;
+
+MinRB = min( min( im2(:,:,1)./im2(:,:,3) ) );
+MinRB = MinRB - MinRB/perc;
+
+MinGB = min( min( im2(:,:,2)./im2(:,:,3) ) );
+MinGB = MinGB - MinGB/perc;
+
+% size( imdbl )
+imgray = double( rgb2gray( im ) );
+a = imdbl( :, :, 1 )./imdbl( :, :, 2 );
+b = imdbl( :, :, 1 )./imdbl( :, :, 3 );
+c = imdbl( :, :, 2 )./imdbl( :, :, 3 );
+
+imb = ( ((a>MinRG & a<MaxRG) & (b>MinRB & b<MaxRB) & (c>MinGB & c<MaxGB)) );
+imb = double( imb );
+
+imdbl( :, :, 1) = ( imb .* imdbl( :, :, 1) );
+imdbl( :, :, 2) = ( imb .* imdbl( :, :, 2) );
+imdbl( :, :, 3) = ( imb .* imdbl( :, :, 3) );
+
+
+if SetG==1
+    imgray = ( double(~boolean(imb)) .* (imgray) );
+    imdbl( :, :, 1) = imdbl( :, :, 1) + imgray;
+    imdbl( :, :, 2) = imdbl( :, :, 2) + imgray;
+    imdbl( :, :, 3) = imdbl( :, :, 3) + imgray;
+end
+
+
+
+
+if size( im, 1 )>size( im, 2 )
+    imF = [ im uint8( imdbl ) ];
+else
+    imF = [ im; uint8( imdbl ) ];
+end
+
+
+imF = im( :, :, 1 )>im( :, :, 2 ) & im( :, :, 1 )>im( :, :, 3 ) );
+
+
+image( imF );
+axis image off
+drawnow
+imwrite( imF, File );
+

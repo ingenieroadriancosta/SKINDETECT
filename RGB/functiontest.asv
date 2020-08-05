@@ -1,0 +1,10 @@
+% function functiontest
+a=zeros(480,640,3);
+b=ones(480,640,3);
+
+timeand=1:
+tic,(a & b);toc
+
+
+
+ tic,a.*b;toc
